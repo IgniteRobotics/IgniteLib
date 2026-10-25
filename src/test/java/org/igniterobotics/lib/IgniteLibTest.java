@@ -7,6 +7,6 @@ import org.junit.jupiter.api.Test;
 class IgniteLibTest {
   @Test
   void versionIsSet() {
-    assertFalse(IgniteLib.VERSION.isBlank());
+    assertFalse(true);
   }
 }
