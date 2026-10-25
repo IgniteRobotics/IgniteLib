@@ -8,7 +8,7 @@ import os
 import sys
 from pathlib import Path
 
-from github import Github, GithubException
+from github import Auth, Github, GithubException
 from google import genai
 from google.genai import types
 
@@ -234,7 +234,7 @@ def main():
     client = setup_gemini(gemini_api_key)
 
     print("Connecting to GitHub...")
-    repo = Github(github_token).get_repo(repo_name)
+    repo = Github(auth=Auth.Token(github_token)).get_repo(repo_name)
 
     print("Loading review prompt template...")
     prompt_template = load_prompt_template()
