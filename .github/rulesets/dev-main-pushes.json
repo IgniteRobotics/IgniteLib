@@ -1,0 +1,21 @@
+{
+  "name": "dev-main-pushes",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": {
+      "include": ["refs/heads/main", "refs/heads/development"],
+      "exclude": []
+    }
+  },
+  "rules": [
+    { "type": "deletion" },
+    { "type": "non_fast_forward" },
+    { "type": "update" },
+    { "type": "creation" }
+  ],
+  "bypass_actors": [
+    { "actor_id": 1, "actor_type": "OrganizationAdmin", "bypass_mode": "exempt" },
+    { "actor_id": "team:code-reviewers", "actor_type": "Team", "bypass_mode": "always" }
+  ]
+}

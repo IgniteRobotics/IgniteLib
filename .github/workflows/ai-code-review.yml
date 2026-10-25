@@ -1,0 +1,71 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - main
+      - development
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to review'
+        required: true
+        type: number
+      dry_run:
+        description: 'Dry run mode (prints review without posting)'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  issues: write      # Allows reading and posting comments to issues
+  pull-requests: write # Allows reading and posting to PRs
+  contents: read     # Standard permission to read the code
+
+jobs:
+  ai-review:
+    name: Gemini Code Review
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: '.github/scripts/requirements.txt'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r .github/scripts/requirements.txt
+
+      - name: Run AI Code Review
+        id: review
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_CODE_REVIEW_KEY }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number || inputs.pr_number }}
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}
+        run: |
+          python .github/scripts/gemini-code-review.py
+
+      - name: Review Status
+        if: always()
+        run: |
+          if [ "${{ steps.review.outcome }}" == "success" ]; then
+            echo "✅ AI code review completed successfully"
+          else
+            echo "⚠️ AI code review encountered an issue, but build continues"
+            echo "Check the logs above for details"
+          fi
+          # Always exit successfully so the workflow doesn't fail
+          exit 0
