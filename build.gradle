@@ -1,0 +1,40 @@
+plugins {
+    id "java-library"
+    id "com.diffplug.spotless" version "8.2.1"
+}
+
+group = "org.igniterobotics"
+version = "0.1.0-SNAPSHOT"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform("org.junit:junit-bom:5.11.4")
+    testImplementation "org.junit.jupiter:junit-jupiter"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+spotless {
+    // Don't automatically enforce check during build (CI runs spotlessCheck separately)
+    enforceCheck false
+
+    java {
+        target 'src/**/*.java'
+        removeUnusedImports()
+        // Use Google Java Format with default style (2-space indentation, matching WPILib standard)
+        googleJavaFormat('1.19.2').reflowLongStrings()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
