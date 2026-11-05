@@ -23,13 +23,9 @@
 hs_err_pid*
 replay_pid*
 
-# AI tooling / OpenSpec (local only)
-openspec/
-.claude/
+# AI tooling (local only)
 .cursor/
 .kiro/
-.github/prompts/opsx-*.prompt.md
-.github/skills/
 
 # Gradle / build output
 .gradle/
@@ -46,3 +42,9 @@ bin/
 # Python
 __pycache__/
 *.pyc
+
+# Ignite agent kit
+.claude/settings.local.json
+.claude/worktrees/
+.codex/
+.ignite/implementing
