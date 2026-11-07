@@ -1,8 +1,8 @@
 package org.igniterobotics.lib.preferences;
 
+import edu.wpi.first.wpilibj.Preferences;
 import java.util.Collection;
 import java.util.function.Supplier;
-import edu.wpi.first.wpilibj.Preferences;
 
 public abstract class RobotPreference<T> implements Supplier<T> {
   protected String key;
@@ -19,7 +19,6 @@ public abstract class RobotPreference<T> implements Supplier<T> {
     Preferences.removeAll();
   }
 
-  
   public static Collection<String> getKeys() {
     return Preferences.getKeys();
   }
